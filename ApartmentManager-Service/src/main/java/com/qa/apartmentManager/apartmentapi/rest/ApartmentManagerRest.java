@@ -32,7 +32,14 @@ public class ApartmentManagerRest {
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	
-
+	@PostMapping("${path.getAllFromMongo}")
+	public String getAllFromMongo() {
+		List<ApartmentManager> list = getFromQueue();
+		for (ApartmentManager am: list) {
+			service.addApartmentManager(am);
+		}
+		return "Success";
+	}
 	
 	@GetMapping("${path.getApartmentManager}")
 	public List<ApartmentManager> getApartmentManager() {
@@ -64,4 +71,9 @@ public class ApartmentManagerRest {
 	        SentApartmentManager apartmentManagerToStore =  new SentApartmentManager(apartmentManager);
 	        jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
 	    }
+	 
+	 private List<ApartmentManager> getFromQueue() {
+		 List<ApartmentManager> mongoData = (List<ApartmentManager>) jmsTemplate.receiveAndConvert("ApartmentManagerQueue");
+		 return mongoData;
+	 }
 }
