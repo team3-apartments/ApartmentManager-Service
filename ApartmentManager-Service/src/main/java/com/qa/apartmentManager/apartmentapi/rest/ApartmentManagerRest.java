@@ -32,6 +32,8 @@ public class ApartmentManagerRest {
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	
+
+	
 	@GetMapping("${path.getApartmentManager}")
 	public List<ApartmentManager> getApartmentManager() {
 		return service.getApartmentManager();

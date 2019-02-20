@@ -3,6 +3,7 @@ package com.qa.apartmentManager.apartmentapi.service;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.qa.apartmentManager.apartmentapi.persistence.domain.ApartmentManager;
@@ -50,6 +51,16 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	        Optional<ApartmentManager> apartmentManagerOptional = repo.findById(id);
 	        return apartmentManagerOptional.isPresent();
 	    }
+
+	@Override
+	public List<ApartmentManager> getByAFilter(String value) {
+		return repo.findByCleanStatus(value);
+	}
+
+	@Override
+	public List<ApartmentManager> getIsOccupied(boolean value) {
+		return repo.findIsOccupied(value);
+	}
 	
 	
 }

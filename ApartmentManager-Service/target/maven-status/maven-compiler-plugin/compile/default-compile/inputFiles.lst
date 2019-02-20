@@ -1,8 +1,9 @@
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\persistence\domain\ApartmentManager.java
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\service\ApartmentManagerServiceImpl.java
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\ApartmentManagerApplication.java
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\rest\ApartmentManagerRest.java
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\persistence\domain\SentApartmentManager.java
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\persistence\repository\ApartmentManagerRepository.java
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\util\exceptions\ApartmentManagerNotFoundException.java
-C:\Users\Admin\eclipse-workspace\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\service\ApartmentManagerService.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\rest\ApartmentManagerRest.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\rest\ApartmentManagerQueriesRest.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\persistence\domain\ApartmentManager.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\ApartmentManagerApplication.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\persistence\domain\SentApartmentManager.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\persistence\repository\ApartmentManagerRepository.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\util\exceptions\ApartmentManagerNotFoundException.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\service\ApartmentManagerService.java
+C:\Users\Admin\Desktop\Project deployment\ApartmentManager-Service\ApartmentManager-Service\src\main\java\com\qa\apartmentManager\apartmentapi\service\ApartmentManagerServiceImpl.java
