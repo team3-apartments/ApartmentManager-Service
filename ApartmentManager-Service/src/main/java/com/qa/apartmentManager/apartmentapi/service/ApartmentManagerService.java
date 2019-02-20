@@ -23,4 +23,5 @@ public interface ApartmentManagerService {
 	
 	List<ApartmentManager> getByAFilter(String value);
 	List<ApartmentManager> getIsOccupied(boolean value);
+	List<ApartmentManager> getIntake(String value);
 }

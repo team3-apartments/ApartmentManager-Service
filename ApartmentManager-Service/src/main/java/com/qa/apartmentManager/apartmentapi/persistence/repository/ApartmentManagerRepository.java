@@ -18,4 +18,7 @@ public interface ApartmentManagerRepository extends JpaRepository<ApartmentManag
 	
 	@Query ("SELECT u FROM ApartmentManager u WHERE u.occupied = :value")
 	public List<ApartmentManager> findIsOccupied(@Param ("value") boolean value);
+	
+	@Query ("SELECT u FROM ApartmentManager u WHERE u.intake = :value")
+	public List<ApartmentManager> findIntake(@Param ("value") String value);
 }

@@ -61,6 +61,11 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	public List<ApartmentManager> getIsOccupied(boolean value) {
 		return repo.findIsOccupied(value);
 	}
+
+	@Override
+	public List<ApartmentManager> getIntake(String value) {
+		return repo.findIntake(value);
+	}
 	
 	
 }

@@ -2,6 +2,7 @@ package com.qa.apartmentManager.apartmentapi.rest;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,13 +33,15 @@ public class ApartmentManagerRest {
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	
-	@PostMapping("${path.getAllFromMongo}")
-	public String getAllFromMongo() {
-		List<ApartmentManager> list = getFromQueue();
-		for (ApartmentManager am: list) {
-			service.addApartmentManager(am);
-		}
-		return "Success";
+	@Value("${url.mongoUrl}")
+	private String mongoUrl;
+	
+	@Value("${url.mongoService}")
+	private String mongoService;
+	
+	@GetMapping("${path.getAllFromMongo}")
+	public List<ApartmentManager> getAllFromMongo() {
+		return getMongoData();
 	}
 	
 	@GetMapping("${path.getApartmentManager}")
@@ -72,8 +75,8 @@ public class ApartmentManagerRest {
 	        jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
 	    }
 	 
-	 private List<ApartmentManager> getFromQueue() {
-		 List<ApartmentManager> mongoData = (List<ApartmentManager>) jmsTemplate.receiveAndConvert("ApartmentManagerQueue");
-		 return mongoData;
+	 private List<ApartmentManager> getMongoData() {
+		 List<ApartmentManager> mongo = restTemplate.getForObject(mongoService + mongoUrl, List.class);
+		 return mongo;
 	 }
 }

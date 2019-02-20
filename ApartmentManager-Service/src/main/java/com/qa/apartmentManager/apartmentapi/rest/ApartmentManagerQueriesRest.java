@@ -37,4 +37,9 @@ public class ApartmentManagerQueriesRest {
 	public List<ApartmentManager> getIsOcciped(@PathVariable boolean value) {
 		return service.getIsOccupied(value);
 	}
+	
+	@GetMapping("${path.getIntake}")
+	public List<ApartmentManager> getIntake(@PathVariable String value) {
+		return service.getIntake(value);
+	}
 }
