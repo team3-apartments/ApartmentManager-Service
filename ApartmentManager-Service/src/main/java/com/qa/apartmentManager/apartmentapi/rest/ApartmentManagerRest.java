@@ -39,6 +39,17 @@ public class ApartmentManagerRest {
 	@Value("${url.mongoService}")
 	private String mongoService;
 	
+	@Value("${url.verifyAccountService}")
+	private String verifyAccountService;
+	
+	@Value("${url.verifyUrl}")
+	private String verifyUrl;
+	
+	@GetMapping("${path.checkPassword}")
+	public String checkPassword(@PathVariable String password) {
+		return verifyPassword(password);
+	}
+	
 	@GetMapping("${path.getAllFromMongo}")
 	public List<ApartmentManager> getAllFromMongo() {
 		return getMongoData();
@@ -78,5 +89,9 @@ public class ApartmentManagerRest {
 	 private List<ApartmentManager> getMongoData() {
 		 List<ApartmentManager> mongo = restTemplate.getForObject(mongoService + mongoUrl, List.class);
 		 return mongo;
+	 }
+	 
+	 private String verifyPassword(String password) {
+		 return restTemplate.getForObject(verifyAccountService + verifyUrl + password , String.class);
 	 }
 }
