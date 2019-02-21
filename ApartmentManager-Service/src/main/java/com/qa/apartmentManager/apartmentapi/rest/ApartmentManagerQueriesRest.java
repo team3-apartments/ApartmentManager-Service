@@ -1,5 +1,6 @@
 package com.qa.apartmentManager.apartmentapi.rest;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,10 @@ public class ApartmentManagerQueriesRest {
 	@GetMapping("${path.getIntake}")
 	public List<ApartmentManager> getIntake(@PathVariable String value) {
 		return service.getIntake(value);
+	}
+	
+	@GetMapping("${path.checkEmptyByDate}")
+	public List<ApartmentManager> checkDate(@PathVariable String date) throws ParseException {
+		return service.checkDate(date);
 	}
 }

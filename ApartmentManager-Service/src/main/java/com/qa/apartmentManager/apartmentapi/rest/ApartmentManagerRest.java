@@ -51,8 +51,13 @@ public class ApartmentManagerRest {
 	}
 	
 	@GetMapping("${path.getAllFromMongo}")
-	public List<ApartmentManager> getAllFromMongo() {
+	public String getAllFromMongo() {
 		return getMongoData();
+	}
+	
+	@GetMapping("${path.getCurrentApartmentManager}")
+	public List<ApartmentManager> getCurrentApartmentManager() {
+		return service.getCurrentApartmentManager();
 	}
 	
 	@GetMapping("${path.getApartmentManager}")
@@ -86,11 +91,11 @@ public class ApartmentManagerRest {
 	        jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
 	    }
 	 
-	 private List<ApartmentManager> getMongoData() {
+	 private String getMongoData() {
 		 List<ApartmentManager> mongo = restTemplate.getForObject(mongoService + mongoUrl, List.class);
-		 return mongo;
+		 return service.upDateH2(mongo);
 	 }
-	 
+	  
 	 private String verifyPassword(String password) {
 		 return restTemplate.getForObject(verifyAccountService + verifyUrl + password , String.class);
 	 }
