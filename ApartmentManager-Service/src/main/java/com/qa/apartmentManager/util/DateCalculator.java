@@ -58,20 +58,31 @@ public class DateCalculator {
 			List<ApartmentManager> afterRequired) {
 		for (ApartmentManager apt : all) {
 			for (ApartmentManager toCheck : afterRequired) {
-				if (apt.getStartDate() != null) {
-					if (apt.getApartmentBuilding().equals(toCheck.getApartmentBuilding())
-							&& apt.getApartmentNumber() == toCheck.getApartmentNumber()
-							&& apt.getRoomNumber() == toCheck.getRoomNumber()) {
-						String[] startDateOriginal = apt.getStartDate().split("-");
-						String[] startDateToCheck = toCheck.getStartDate().split("-");
-						for (int i = 0; i < 3; i++) {
+				try {
+					if (apt.getStartDate() != null) {
+						if (apt.getApartmentBuilding().equals(toCheck.getApartmentBuilding())
+								&& apt.getApartmentNumber() == toCheck.getApartmentNumber()
+								&& apt.getRoomNumber() == toCheck.getRoomNumber()) {
+							String[] startDateOriginal = apt.getStartDate().split("-");
+							String[] startDateToCheck = toCheck.getStartDate().split("-");
+							for (int i = 0; i < 3; i++) {
 
-							if (compareDateBefore(startDateOriginal[i], startDateToCheck[i]).equals("earlier")) {
-								apt.setOccupied(false);
-								System.out.println("hello");
-							} 
+								if (compareDateBefore(startDateOriginal[i], startDateToCheck[i]).equals("earlier")) {
+									apt.setOccupied(false);
+								} else if (compareDateBefore(startDateOriginal[i], startDateToCheck[i])
+										.equals("same")) {
+
+								} else {
+									apt.setOccupied(true);
+								}
+							}
 						}
 					}
+					else {
+						apt.setOccupied(false);
+					}
+				} catch (Exception e) {
+					apt.setOccupied(false);
 				}
 			}
 		}

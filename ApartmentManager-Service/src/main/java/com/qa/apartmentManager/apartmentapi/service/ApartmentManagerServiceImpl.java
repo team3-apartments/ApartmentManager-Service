@@ -44,7 +44,7 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 
 	public ResponseEntity<Object> updateApartmentManager(ApartmentManager apartmentManager, Long id) {
 		if (apartmentManagerExists(id)) {
-			apartmentManager.setId(id);
+			apartmentManager.setApartmentId(id);
 			repo.save(apartmentManager);
 			return ResponseEntity.ok().build();
 		}

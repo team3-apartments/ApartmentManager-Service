@@ -44,9 +44,20 @@ public class ApartmentManager {
 		this.bedStatus = bedStatus; 
 		this.notes = notes;
 	}
-	
-	public Long setId(Long id) {
-		return id;
+	public ApartmentManager(SentApartmentManager sentApartmentManager) {
+		this.apartmentId = sentApartmentManager.getApartmentId();
+		this.apartmentNumber = sentApartmentManager.getApartmentNumber();
+		this.apartmentBuilding = sentApartmentManager.getApartmentBuilding();
+		this.roomNumber = sentApartmentManager.getRoomNumber();
+		this.studentName = sentApartmentManager.getStudentName(); 
+		this.intake = sentApartmentManager.getIntake();
+		this.startDate = sentApartmentManager.getStartDate();
+		this.endDate = sentApartmentManager.getEndDate();
+		this.cleanStatus = sentApartmentManager.getCleanStatus();
+		this.occupied = sentApartmentManager.isOccupied();
+		this.ensuite = sentApartmentManager.isEnsuite();
+		this.bedStatus = sentApartmentManager.getBedStatus(); 
+		this.notes = sentApartmentManager.getNotes();
 	}
 
 	public Long getApartmentId() {
@@ -129,10 +140,5 @@ public class ApartmentManager {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
-	public String toString() {
-    	return this.apartmentId + this.apartmentNumber + this.apartmentBuilding + this.roomNumber + this.studentName + this.intake + this.startDate + this.endDate + this.cleanStatus + this.occupied + this.ensuite + this.bedStatus + this.notes;
-    }
-
 	
 }

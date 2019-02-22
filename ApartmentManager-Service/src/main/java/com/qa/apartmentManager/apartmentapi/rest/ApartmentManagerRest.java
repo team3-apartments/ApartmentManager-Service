@@ -1,5 +1,7 @@
 package com.qa.apartmentManager.apartmentapi.rest;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import com.qa.apartmentManager.apartmentapi.persistence.domain.ApartmentManager;
 import com.qa.apartmentManager.apartmentapi.persistence.domain.SentApartmentManager;
 import com.qa.apartmentManager.apartmentapi.service.ApartmentManagerService;
+import com.qa.apartmentManager.util.JSONUtil;
 
 @CrossOrigin
 @RequestMapping("${path.base}")
@@ -26,77 +29,92 @@ public class ApartmentManagerRest {
 
 	@Autowired
 	private ApartmentManagerService service;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private JmsTemplate jmsTemplate;
-	
+
 	@Value("${url.mongoUrl}")
 	private String mongoUrl;
-	
+
 	@Value("${url.mongoService}")
 	private String mongoService;
-	
+
 	@Value("${url.verifyAccountService}")
 	private String verifyAccountService;
-	
+
 	@Value("${url.verifyUrl}")
 	private String verifyUrl;
-	
+
 	@GetMapping("${path.checkPassword}")
 	public String checkPassword(@PathVariable String password) {
 		return verifyPassword(password);
 	}
-	
+
 	@GetMapping("${path.getAllFromMongo}")
 	public String getAllFromMongo() {
 		return getMongoData();
 	}
-	
+
 	@GetMapping("${path.getCurrentApartmentManager}")
 	public List<ApartmentManager> getCurrentApartmentManager() {
 		return service.getCurrentApartmentManager();
 	}
-	
+
 	@GetMapping("${path.getApartmentManager}")
 	public List<ApartmentManager> getApartmentManager() {
 		return service.getApartmentManager();
 	}
 
 	@GetMapping("${path.getApartmentManagerById}")
-    public ApartmentManager getApartmentManager(@PathVariable Long id) {
-        return service.getApartmentManager(id);
-    }
+	public ApartmentManager getApartmentManager(@PathVariable Long id) {
+		return service.getApartmentManager(id);
+	}
 
 	@DeleteMapping("${path.deleteApartmentManager}")
-    public ResponseEntity<Object> deleteApartmentManager(@PathVariable Long id) {
-        return service.deleteApartmentManager(id);
-    }
-	
-	 @PutMapping("${path.updateApartmentManager}")
-	    public ResponseEntity<Object> updateApartmentManager(@RequestBody ApartmentManager apartmentmanager, @PathVariable Long id) {
-	        return service.updateApartmentManager(apartmentmanager, id);
-	    }
-	
-	 @PostMapping("${path.createApartmentManager}")
-	    public ApartmentManager createApartmentManager(@RequestBody ApartmentManager apartmentManager) {
-	        sendToQueue(apartmentManager);
-	    	return service.addApartmentManager(apartmentManager);
-	    }
-	
-	 private void sendToQueue(ApartmentManager apartmentManager){
-	        SentApartmentManager apartmentManagerToStore =  new SentApartmentManager(apartmentManager);
-	        jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
-	    }
-	 
-	 private String getMongoData() {
-		 List<ApartmentManager> mongo = restTemplate.getForObject(mongoService + mongoUrl, List.class);
-		 return service.upDateH2(mongo);
-	 }
-	  
-	 private String verifyPassword(String password) {
-		 return restTemplate.getForObject(verifyAccountService + verifyUrl + password , String.class);
-	 }
+	public ResponseEntity<Object> deleteApartmentManager(@PathVariable Long id) {
+		return service.deleteApartmentManager(id);
+	}
+
+	@PutMapping("${path.updateApartmentManager}")
+	public ResponseEntity<Object> updateApartmentManager(@RequestBody ApartmentManager apartmentmanager,
+			@PathVariable Long id) {
+		return service.updateApartmentManager(apartmentmanager, id);
+	}
+
+	@PostMapping("${path.createApartmentManager}")
+	public ApartmentManager createApartmentManager(@RequestBody ApartmentManager apartmentManager) {
+		sendToQueue(apartmentManager);
+		return service.addApartmentManager(apartmentManager);
+	}
+
+	private void sendToQueue(ApartmentManager apartmentManager) {
+		// SentApartmentManager apartmentManagerToStore = new
+		// SentApartmentManager(apartmentManager);
+		// jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
+	}
+
+	private String getMongoData() {
+		List<SentApartmentManager> mongo = restTemplate.getForObject(mongoService + mongoUrl, List.class);
+
+		Object[] SAMArray = mongo.toArray();
+
+		System.out.println("asdd");
+		List<ApartmentManager> toConvert = new ArrayList<>();
+
+		for (Object obj : SAMArray) {
+
+			String some = JSONUtil.getJSONForObject(obj);
+			ApartmentManager toPrint = JSONUtil.getObjectForJSON(some, ApartmentManager.class);
+			toConvert.add(toPrint);
+		}
+
+		return service.upDateH2((toConvert));
+	}
+
+	private String verifyPassword(String password) {
+		return restTemplate.getForObject(verifyAccountService + verifyUrl + password, String.class);
+	}
 }
