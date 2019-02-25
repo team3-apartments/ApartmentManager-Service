@@ -23,7 +23,7 @@ public interface ApartmentManagerService {
 	ResponseEntity<Object> updateApartmentManager(ApartmentManager apartmentManager, Long Id);
 	
 	String upDateH2(List<ApartmentManager> toSave);
-	
+	List<ApartmentManager> getApartmentByDetails(String apartmentBuilding, int apartmentNumber);
 	List<ApartmentManager> getByAFilter(String value);
 	List<ApartmentManager> getIsOccupied(boolean value);
 	List<ApartmentManager> getIntake(String value);

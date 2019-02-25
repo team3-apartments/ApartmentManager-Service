@@ -9,6 +9,9 @@ public class DateCalculator {
 
 	public static List<ApartmentManager> verifyDates(List<ApartmentManager> allApts, String[] dates) {
 		List<ApartmentManager> afterRequired = new ArrayList<>();
+		ArrayList<String> buildingNo = new ArrayList<>();
+		ArrayList<Integer> aptNo = new ArrayList<>();
+		ArrayList<Integer> roomNo = new ArrayList<>();
 		for (ApartmentManager apt : allApts) {
 			if (apt.getStartDate() == null) {
 				apt.setOccupied(false);
@@ -26,9 +29,22 @@ public class DateCalculator {
 						apt.setOccupied(false);
 					}
 				}
+				else {
+					buildingNo.add(apt.getApartmentBuilding());
+					aptNo.add(apt.getApartmentNumber());
+					roomNo.add(apt.getRoomNumber());
+				}
 			}
 		}
-		return checkForPrevious(allApts, afterRequired, dates);
+		List<ApartmentManager> beforeInBetween = checkForPrevious(allApts, afterRequired, dates);
+		for(ApartmentManager apart: beforeInBetween ) {
+			for(int i=0;i<roomNo.size();i++) {
+				if(apart.getApartmentBuilding().equals(buildingNo.get(i)) && apart.getApartmentNumber() == aptNo.get(i) && apart.getRoomNumber() == roomNo.get(i)) {
+					apart.setOccupied(true);
+				}
+			}
+		}
+		return beforeInBetween;
 	}
 
 	public static List<ApartmentManager> checkForPrevious(List<ApartmentManager> all,
@@ -50,6 +66,7 @@ public class DateCalculator {
 					}
 				}
 			}
+			
 		}
 		return all;
 	}

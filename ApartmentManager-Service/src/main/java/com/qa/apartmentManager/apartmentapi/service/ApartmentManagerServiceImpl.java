@@ -21,6 +21,8 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	@Autowired
 	private ApartmentManagerRepository repo;
 
+	private static Long staticId =1L;
+	
 	public List<ApartmentManager> getApartmentManager() {
 		return repo.findAll();
 	}
@@ -31,6 +33,12 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	}
 
 	public ApartmentManager addApartmentManager(ApartmentManager apartmentmanager) {
+		for (Long i= 1L;i<=repo.findAll().size();i++) {
+			if (repo.findById(i) != null) {
+				staticId = i+1;
+			}
+		}
+		apartmentmanager.setApartmentId(staticId);
 		return repo.save(apartmentmanager);
 	}
 
@@ -92,6 +100,11 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	public String upDateH2(List<ApartmentManager> toSave) {
 		repo.saveAll(toSave);
 		return "{\"message\": \"H2 updated\"}";
+	}
+
+	@Override
+	public List<ApartmentManager> getApartmentByDetails(String apartmentBuilding, int apartmentNumber) {
+		return repo.findByApartment(apartmentBuilding, apartmentNumber);
 	}
 
 }

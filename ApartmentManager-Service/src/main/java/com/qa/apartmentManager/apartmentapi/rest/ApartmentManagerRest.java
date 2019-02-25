@@ -36,6 +36,12 @@ public class ApartmentManagerRest {
 	@Autowired
 	private JmsTemplate jmsTemplate;
 
+	@Value("${url.mongoUpdate}")
+	private String mongoUpdate;
+	
+	@Value("${url.mongoDelete}")
+	private String mongoDelete;
+	
 	@Value("${url.mongoUrl}")
 	private String mongoUrl;
 
@@ -48,16 +54,19 @@ public class ApartmentManagerRest {
 	@Value("${url.verifyUrl}")
 	private String verifyUrl;
 
+	//done
 	@GetMapping("${path.checkPassword}")
 	public String checkPassword(@PathVariable String password) {
 		return verifyPassword(password);
 	}
 
+	//done
 	@GetMapping("${path.getAllFromMongo}")
 	public String getAllFromMongo() {
 		return getMongoData();
 	}
 
+	//done
 	@GetMapping("${path.getCurrentApartmentManager}")
 	public List<ApartmentManager> getCurrentApartmentManager() {
 		return service.getCurrentApartmentManager();
@@ -75,39 +84,50 @@ public class ApartmentManagerRest {
 
 	@DeleteMapping("${path.deleteApartmentManager}")
 	public ResponseEntity<Object> deleteApartmentManager(@PathVariable Long id) {
+		mongoDelete(id);
 		return service.deleteApartmentManager(id);
 	}
 
 	@PutMapping("${path.updateApartmentManager}")
 	public ResponseEntity<Object> updateApartmentManager(@RequestBody ApartmentManager apartmentmanager,
 			@PathVariable Long id) {
+		mongoUpdate(id, apartmentmanager);
 		return service.updateApartmentManager(apartmentmanager, id);
 	}
 
 	@PostMapping("${path.createApartmentManager}")
 	public ApartmentManager createApartmentManager(@RequestBody ApartmentManager apartmentManager) {
-		sendToQueue(apartmentManager);
+		sendToQueueForCreate(apartmentManager);
 		return service.addApartmentManager(apartmentManager);
 	}
 
-	private void sendToQueue(ApartmentManager apartmentManager) {
-		// SentApartmentManager apartmentManagerToStore = new
-		// SentApartmentManager(apartmentManager);
-		// jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
+	private void sendToQueueForCreate(ApartmentManager apartmentManager) {
+		 SentApartmentManager apartmentManagerToStore = new
+		 SentApartmentManager(apartmentManager);
+		 jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
+	}
+	
+	private void mongoDelete(Long id) {
+		restTemplate.delete(mongoService+ mongoDelete + id);
+	}
+	
+	private void mongoUpdate(Long id, ApartmentManager apartmentManager) {
+		restTemplate.put(mongoService + mongoUpdate + id, apartmentManager);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String getMongoData() {
 		List<SentApartmentManager> mongo = restTemplate.getForObject(mongoService + mongoUrl, List.class);
-
+		
 		Object[] SAMArray = mongo.toArray();
-
-		System.out.println("asdd");
 		List<ApartmentManager> toConvert = new ArrayList<>();
 
 		for (Object obj : SAMArray) {
-
+			LinkedHashMap map = (LinkedHashMap) obj;
+			int id = (int) map.get("apartmentId");
 			String some = JSONUtil.getJSONForObject(obj);
 			ApartmentManager toPrint = JSONUtil.getObjectForJSON(some, ApartmentManager.class);
+			toPrint.setApartmentId((long) id);
 			toConvert.add(toPrint);
 		}
 

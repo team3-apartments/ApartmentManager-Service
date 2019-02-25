@@ -21,4 +21,7 @@ public interface ApartmentManagerRepository extends JpaRepository<ApartmentManag
 	
 	@Query ("SELECT u FROM ApartmentManager u WHERE u.intake = :value")
 	public List<ApartmentManager> findIntake(@Param ("value") String value);
+	
+	@Query ("SELECT u FROM ApartmentManager u WHERE u.apartmentBuilding = :apartmentBuilding AND u.apartmentNumber = :apartmentNumber")
+	public List<ApartmentManager> findByApartment(@Param ("apartmentBuilding") String apartmentBuilding, @Param ("apartmentNumber") int apartmentNumber);
 }

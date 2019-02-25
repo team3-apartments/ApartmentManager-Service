@@ -48,4 +48,9 @@ public class ApartmentManagerQueriesRest {
 	public List<ApartmentManager> checkDate(@PathVariable String date) throws ParseException {
 		return service.checkDate(date);
 	}
+	
+	@GetMapping("${path.getApartmentByDetails}")
+	public List<ApartmentManager> getApartmentByDetails(@PathVariable String apartmentBuilding, @PathVariable int apartmentNumber) {
+		return service.getApartmentByDetails(apartmentBuilding, apartmentNumber);
+	}
 }
