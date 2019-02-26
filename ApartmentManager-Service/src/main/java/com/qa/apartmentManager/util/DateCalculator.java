@@ -29,21 +29,11 @@ public class DateCalculator {
 						apt.setOccupied(false);
 					}
 				}
-				else {
-					buildingNo.add(apt.getApartmentBuilding());
-					aptNo.add(apt.getApartmentNumber());
-					roomNo.add(apt.getRoomNumber());
-				}
+
 			}
 		}
 		List<ApartmentManager> beforeInBetween = checkForPrevious(allApts, afterRequired, dates);
-		for(ApartmentManager apart: beforeInBetween ) {
-			for(int i=0;i<roomNo.size();i++) {
-				if(apart.getApartmentBuilding().equals(buildingNo.get(i)) && apart.getApartmentNumber() == aptNo.get(i) && apart.getRoomNumber() == roomNo.get(i)) {
-					apart.setOccupied(true);
-				}
-			}
-		}
+
 		return beforeInBetween;
 	}
 
