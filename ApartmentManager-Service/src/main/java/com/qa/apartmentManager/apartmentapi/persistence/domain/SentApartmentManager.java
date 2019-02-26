@@ -1,6 +1,5 @@
 package com.qa.apartmentManager.apartmentapi.persistence.domain;
 
-import java.util.Date;
 
 public class SentApartmentManager {
 

@@ -1,15 +1,12 @@
 package com.qa.apartmentManager.apartmentapi.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.qa.apartmentManager.apartmentapi.constants.Constants;
 import com.qa.apartmentManager.apartmentapi.persistence.domain.ApartmentManager;
 import com.qa.apartmentManager.apartmentapi.persistence.repository.ApartmentManagerRepository;
 import com.qa.apartmentManager.apartmentapi.util.exceptions.ApartmentManagerNotFoundException;
@@ -65,7 +62,7 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	}
 
 	@Override
-	public List<ApartmentManager> getByAFilter(String value) {
+	public List<ApartmentManager> getByACleanStatus(String value) {
 		return repo.findByCleanStatus(value);
 	}
 
@@ -99,7 +96,7 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	@Override
 	public String upDateH2(List<ApartmentManager> toSave) {
 		repo.saveAll(toSave);
-		return "{\"message\": \"H2 updated\"}";
+		return Constants.H2MESSAGE;
 	}
 
 	@Override
