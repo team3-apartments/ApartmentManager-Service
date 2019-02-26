@@ -56,6 +56,7 @@ public class DateCalculator {
 
 	public static List<ApartmentManager> checkForMultipleIntakes(List<ApartmentManager> all,
 			List<ApartmentManager> afterRequired) {
+		List<Long> ids = new ArrayList<>();
 		for (ApartmentManager apt : all) {
 			for (ApartmentManager toCheck : afterRequired) {
 				try {
@@ -69,20 +70,36 @@ public class DateCalculator {
 
 								if (compareDateBefore(startDateOriginal[i], startDateToCheck[i]).equals("earlier")) {
 									apt.setOccupied(false);
+									ids.add(apt.getApartmentId());
 								} else if (compareDateBefore(startDateOriginal[i], startDateToCheck[i])
 										.equals("same")) {
-								} else {
+								}
+								else {
 									apt.setOccupied(true);
+									ids.add(apt.getApartmentId());
 								}
 							}
 						}
 					}
 					else {
 						apt.setOccupied(false);
+						ids.add(apt.getApartmentId());
 					}
 				} catch (Exception e) {
 					apt.setOccupied(false);
+					ids.add(apt.getApartmentId());
 				}
+			}
+		}
+		for (ApartmentManager apt : all) {
+			int found = 0;
+			for (Long id : ids) {
+				if (apt.getApartmentId() == id) {
+					found = 1;
+				}
+			}
+			if (found == 0) {
+				apt.setOccupied(false);
 			}
 		}
 		return all;

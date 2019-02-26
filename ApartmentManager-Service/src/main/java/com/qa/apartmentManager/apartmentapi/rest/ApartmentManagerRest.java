@@ -1,11 +1,8 @@
 package com.qa.apartmentManager.apartmentapi.rest;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.qa.apartmentManager.apartmentapi.constants.Constants;
 import com.qa.apartmentManager.apartmentapi.persistence.domain.ApartmentManager;
 import com.qa.apartmentManager.apartmentapi.persistence.domain.SentApartmentManager;
 import com.qa.apartmentManager.apartmentapi.service.ApartmentManagerService;
-import com.qa.apartmentManager.util.JSONUtil;
+import com.qa.apartmentManager.util.DBTranslator;
 
 @CrossOrigin
 @RequestMapping("${path.base}")
@@ -65,22 +64,19 @@ public class ApartmentManagerRest {
 		return pickColour();
 	}
 	
-	//done
 	@GetMapping("${path.checkPassword}")
 	public String checkPassword(@PathVariable String password) {
 		return verifyPassword(password);
 	}
 
-	//done
 	@GetMapping("${path.getAllFromMongo}")
 	public String getAllFromMongo() {
 		return getMongoData();
 	}
 
-	//done
 	@GetMapping("${path.getCurrentApartmentManager}")
-	public List<ApartmentManager> getCurrentApartmentManager() {
-		return service.getCurrentApartmentManager();
+	public List<ApartmentManager> getCurrentApartmentManager(@PathVariable String intake) {
+		return service.getCurrentApartmentManager(intake);
 	}
 
 	@GetMapping("${path.getApartmentManager}")
@@ -94,16 +90,20 @@ public class ApartmentManagerRest {
 	}
 
 	@DeleteMapping("${path.deleteApartmentManager}")
-	public ResponseEntity<Object> deleteApartmentManager(@PathVariable Long id) {
-		mongoDelete(id);
+	public String deleteApartmentManager(@PathVariable Long id) {
+		 if (mongoDelete(id)) {
 		return service.deleteApartmentManager(id);
+		 }
+		 else return Constants.FAILMSG;
 	}
 
 	@PutMapping("${path.updateApartmentManager}")
-	public ResponseEntity<Object> updateApartmentManager(@RequestBody ApartmentManager apartmentmanager,
+	public String updateApartmentManager(@RequestBody ApartmentManager apartmentmanager,
 			@PathVariable Long id) {
-		mongoUpdate(id, apartmentmanager);
-		return service.updateApartmentManager(apartmentmanager, id);
+		if (mongoUpdate(id, apartmentmanager)) {
+			return service.updateApartmentManager(apartmentmanager, id);
+		}
+		else return Constants.FAILMSG;
 	}
 
 	@PostMapping("${path.createApartmentManager}")
@@ -118,31 +118,31 @@ public class ApartmentManagerRest {
 		 jmsTemplate.convertAndSend("ApartmentManagerQueue", apartmentManagerToStore);
 	}
 	
-	private void mongoDelete(Long id) {
-		restTemplate.delete(mongoService+ mongoDelete + id);
+	private boolean mongoDelete(Long id) {
+		try {
+			restTemplate.delete(mongoService+ mongoDelete + id);
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 	
-	private void mongoUpdate(Long id, ApartmentManager apartmentManager) {
-		restTemplate.put(mongoService + mongoUpdate + id, apartmentManager);
+	private boolean mongoUpdate(Long id, ApartmentManager apartmentManager) {
+		try {
+			restTemplate.put(mongoService + mongoUpdate + id, apartmentManager);
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	private String getMongoData() {
 		List<SentApartmentManager> mongo = restTemplate.getForObject(mongoService + mongoUrl, List.class);
-		
 		Object[] SAMArray = mongo.toArray();
-		List<ApartmentManager> toConvert = new ArrayList<>();
-
-		for (Object obj : SAMArray) {
-			LinkedHashMap map = (LinkedHashMap) obj;
-			int id = (int) map.get("apartmentId");
-			String some = JSONUtil.getJSONForObject(obj);
-			ApartmentManager toPrint = JSONUtil.getObjectForJSON(some, ApartmentManager.class);
-			toPrint.setApartmentId((long) id);
-			toConvert.add(toPrint);
-		}
-
-		return service.upDateH2((toConvert));
+		return service.upDateH2(DBTranslator.getForMongo(SAMArray));
 	}
 
 	private String verifyPassword(String password) {
