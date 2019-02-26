@@ -53,7 +53,18 @@ public class ApartmentManagerRest {
 
 	@Value("${url.verifyUrl}")
 	private String verifyUrl;
+	
+	@Value("${url.colourPickerService}")
+	private String colourPickerService;
+	
+	@Value("${url.colourUrl}")
+	private String colourUrl;
 
+	@GetMapping("${path.getColour}")
+	public String getColour() {
+		return pickColour();
+	}
+	
 	//done
 	@GetMapping("${path.checkPassword}")
 	public String checkPassword(@PathVariable String password) {
@@ -136,5 +147,9 @@ public class ApartmentManagerRest {
 
 	private String verifyPassword(String password) {
 		return restTemplate.getForObject(verifyAccountService + verifyUrl + password, String.class);
+	}
+	
+	private String pickColour() {
+		return restTemplate.getForObject(colourPickerService + colourUrl, String.class);
 	}
 }
