@@ -65,19 +65,16 @@ public class ApartmentManagerRest {
 		return pickColour();
 	}
 	
-	//done
 	@GetMapping("${path.checkPassword}")
 	public String checkPassword(@PathVariable String password) {
 		return verifyPassword(password);
 	}
 
-	//done
 	@GetMapping("${path.getAllFromMongo}")
 	public String getAllFromMongo() {
 		return getMongoData();
 	}
 
-	//done
 	@GetMapping("${path.getCurrentApartmentManager}")
 	public List<ApartmentManager> getCurrentApartmentManager() {
 		return service.getCurrentApartmentManager();
