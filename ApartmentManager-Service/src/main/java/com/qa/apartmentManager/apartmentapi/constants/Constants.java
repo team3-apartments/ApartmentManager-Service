@@ -16,4 +16,6 @@ public class Constants {
 	
 	public static final String FINDAPARTMENTQUERY = "SELECT u FROM ApartmentManager u WHERE u.apartmentBuilding = :apartmentBuilding AND u.apartmentNumber = :apartmentNumber";
 	
+	public static final int APROPRIATE = 100;
+	
 }

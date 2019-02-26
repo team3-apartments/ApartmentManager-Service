@@ -29,8 +29,9 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	}
 
 	public ApartmentManager addApartmentManager(ApartmentManager apartmentmanager) {
-		for (Long i= 1L;i<=repo.findAll().size();i++) {
-			if (repo.findById(i) != null) {
+		for (Long i= 1L;i<=repo.findAll().size() + Constants.APROPRIATE;i++) {
+			if (repo.findById(i).isPresent()) {
+				System.out.println(repo.findById(i).toString());
 				staticId = i+1;
 			}
 		}
