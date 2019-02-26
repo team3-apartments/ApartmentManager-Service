@@ -17,6 +17,7 @@ public class DateCalculator {
 				apt.setOccupied(false);
 				continue;
 			}
+			apt.setOccupied(true);
 			String[] startDates = apt.getStartDate().split("-");
 			String[] endDates = apt.getEndDate().split("-");
 
@@ -29,7 +30,6 @@ public class DateCalculator {
 						apt.setOccupied(false);
 					}
 				}
-
 			}
 		}
 		List<ApartmentManager> beforeInBetween = checkForPrevious(allApts, afterRequired, dates);
