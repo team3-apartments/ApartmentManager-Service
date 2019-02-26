@@ -3,7 +3,6 @@ package com.qa.apartmentManager.apartmentapi.service;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.qa.apartmentManager.apartmentapi.constants.Constants;
@@ -39,21 +38,21 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 		return repo.save(apartmentmanager);
 	}
 
-	public ResponseEntity<Object> deleteApartmentManager(Long id) {
+	public String deleteApartmentManager(Long id) {
 		if (apartmentManagerExists(id)) {
 			repo.deleteById(id);
-			return ResponseEntity.ok().build();
+			return Constants.SUCCESSMSG;
 		}
-		return ResponseEntity.notFound().build();
+		return Constants.FAILMSG;
 	}
 
-	public ResponseEntity<Object> updateApartmentManager(ApartmentManager apartmentManager, Long id) {
+	public String updateApartmentManager(ApartmentManager apartmentManager, Long id) {
 		if (apartmentManagerExists(id)) {
 			apartmentManager.setApartmentId(id);
 			repo.save(apartmentManager);
-			return ResponseEntity.ok().build();
+			return Constants.SUCCESSMSG;
 		}
-		return ResponseEntity.notFound().build();
+		return Constants.FAILMSG;
 	}
 
 	private boolean apartmentManagerExists(Long id) {
@@ -86,11 +85,12 @@ public class ApartmentManagerServiceImpl implements ApartmentManagerService {
 	}
 
 	@Override
-	public List<ApartmentManager> getCurrentApartmentManager() {
+	public List<ApartmentManager> getCurrentApartmentManager(String intake) {
 		List<ApartmentManager> all = repo.findAll();
 		List<ApartmentManager> current = DateCalculator.checkForMultipleIntakes(all, all);
 		repo.saveAll(current);
-		return repo.findIsOccupied(false);
+		
+		return repo.findIsOccupied(Boolean.parseBoolean(intake));
 	}
 
 	@Override
