@@ -34,21 +34,50 @@ public class DateCalculator {
 
 	public static List<ApartmentManager> checkForPrevious(List<ApartmentManager> all,
 			List<ApartmentManager> afterRequired, String[] dates) {
+		List<Long> ids = new ArrayList<>();
 		for (ApartmentManager apt : all) {
 			for (ApartmentManager toCheck : afterRequired) {
-				if (apt.getStartDate() != null) {
-					if (apt.getApartmentBuilding().equals(toCheck.getApartmentBuilding())
-							&& apt.getApartmentNumber() == toCheck.getApartmentNumber()
-							&& apt.getRoomNumber() == toCheck.getRoomNumber()) {
-						String[] startDateOriginal = apt.getStartDate().split("-");
-						String[] startDateToCheck = toCheck.getStartDate().split("-");
-						for (int i = 0; i < 3; i++) {
-							if (compareDateBefore(startDateOriginal[i], startDateToCheck[i]).equals("earlier")) {
-								apt.setOccupied(true);
+				try {
+					if (apt.getStartDate() != null) {
+						if (apt.getApartmentBuilding().equals(toCheck.getApartmentBuilding())
+								&& apt.getApartmentNumber() == toCheck.getApartmentNumber()
+								&& apt.getRoomNumber() == toCheck.getRoomNumber()) {
+							String[] startDateOriginal = apt.getStartDate().split("-");
+							String[] startDateToCheck = toCheck.getStartDate().split("-");
+							for (int i = 0; i < 3; i++) {
+
+								if (compareDateBefore(startDateOriginal[i], startDateToCheck[i]).equals("earlier")) {
+									apt.setOccupied(false);
+									ids.add(apt.getApartmentId());
+								} else if (compareDateBefore(startDateOriginal[i], startDateToCheck[i])
+										.equals("same")) {
+								}
+								else {
+									apt.setOccupied(true);
+									ids.add(apt.getApartmentId());
+								}
 							}
 						}
 					}
+					else {
+						apt.setOccupied(false);
+						ids.add(apt.getApartmentId());
+					}
+				} catch (Exception e) {
+					apt.setOccupied(false);
+					ids.add(apt.getApartmentId());
 				}
+			}
+		}
+		for (ApartmentManager apt : all) {
+			int found = 0;
+			for (Long id : ids) {
+				if (apt.getApartmentId() == id) {
+					found = 1;
+				}
+			}
+			if (found == 0) {
+				apt.setOccupied(false);
 			}
 		}
 		return all;
